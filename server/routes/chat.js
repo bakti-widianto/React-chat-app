@@ -12,8 +12,8 @@ router.get('/', function (req, res, next) {
           _id: item._id,
           name: item.name,
           message: item.message,
-          day: moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss").split(" ")[0],
-          hour: moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss").split(" ")[1]
+          date: moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss").split(" ")[0],
+          time: moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss").split(" ")[1]
         }
       })
       res.json({

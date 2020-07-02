@@ -88,3 +88,23 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+
+/* socket io connection */
+var socket = require('socket.io');
+
+var io = socket(server);
+
+io.on('connection', socket => {
+  console.log('made socket connection', socket.id);
+
+// emit new chat
+
+// broadcasts typing except original one
+
+// broadcast delete
+
+// broadcast chat failed
+
+})
+
