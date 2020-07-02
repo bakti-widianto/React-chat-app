@@ -10,27 +10,25 @@ export default class FormItem extends Component {
    }
 
    handleChange(event) {
-      console.log(event.keyCode);
       this.setState({ [event.target.name]: event.target.value });
    }
 
    handleSubmit(event) {
-      console.log(event)
       this.setState({ message: '' })
+      console.log(event.target)
       event.preventDefault();
-      console.log(this.state)
    }
 
    render() {
       return (
-         <div className="card-footer">
+         <div className="card-footer d-flex mb-4 justify-content-center">
             <form onSubmit={this.handleSubmit}>
                <div className="input-group">
                   <div className="input-group-append">
                      <span className="input-group-text attach_btn"><i className="fas fa-paperclip"></i></span>
                   </div>
                   <div className="form-group-row">
-                     <input className="form-control type_name" name="name" type="text" value={this.state.name} onChange={this.handleChange} placeholder="Type your Name..." />
+                     <input className="form-control type_msg" name="name" type="text" value={this.state.name} onChange={this.handleChange} placeholder="Type your Name..." />
                      <textarea type="text" value={this.state.message} name="message" className="form-control type_msg" placeholder="Type your message..." onChange={this.handleChange}></textarea>
                   </div>
                   <div className="input-group-append">

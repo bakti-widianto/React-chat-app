@@ -3,7 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import io from 'socket.io-client';
 import ChatForm from './ChatForm';
-import ChatItem from './ChatItem';
+import ListChat from './ListChat';
 
 var socket = io.connect('http://localhost:3001');
 const request = axios.create({
@@ -19,6 +19,10 @@ export default class ChatBox extends Component {
    }
 
    componentDidMount() {
+      this.loadChat()
+   }
+
+   componentDidUpdate() {
 
    }
 
@@ -27,24 +31,29 @@ export default class ChatBox extends Component {
          .then(function (response) {
             let messages = response.data.data.map(item => ({ ...item, sent: true }))
             this.setState({ data: messages });
-            console.log(this.state)
+            console.log(this.state.data);
          }.bind(this))
          .catch(function (error) {
             alert(error)
          })
    }
 
-   addChat(name, message){
+   addChat(name, message) {
+      // add chat in Front-end
       this.setState((state, props) => ({
-         data : [...state.data, {}]
+         data: [...state.data, {}]
       }))
+      request.post('/chat', {
+         name,
+         message
+      })
    }
-   
+
 
    render() {
       return (
-         <div>
-            <ChatItem />
+         <div className="card-body msg_card_body">
+            <ListChat messages={this.state.data} />
             <ChatForm />
          </div>
       )
