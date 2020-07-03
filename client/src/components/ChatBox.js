@@ -31,20 +31,22 @@ export default class ChatBox extends Component {
       }.bind(this))
 
       // listening on "delete chat"
-      socket.on('delete chat', function (id) {
-         this.setState(state => ({
+      socket.on('delete-chat-frontend', function (id) {
+         console.log('deleting in front');
+         console.log(this.state.data);
+         console.log('id from backend:', id)
+         this.setState((state, props) => ({
             data: state.data.filter(item => {
-               return item.id !== id
+               return item.id !== id.id
             })
          }))
       }.bind(this))
 
-      socket.on('typing', function (name) {
-         console.log('ada orang lagi typing')
-         // this.setState({
-         //    typer: name
-         // })
-      })
+      socket.on('typing', function (typer) {
+         this.setState({
+            typer
+         })
+      }.bind(this))
    }
 
    componentDidUpdate() {
@@ -69,7 +71,7 @@ export default class ChatBox extends Component {
          data: [...state.data, { id: id, name: data.name, message: data.message, sent: true }]
       }))
 
-      socket.emit('chat', {
+      socket.emit('chats', {
          id: id,
          name: data.name,
          message: data.message
@@ -135,7 +137,7 @@ export default class ChatBox extends Component {
                data: state.data.filter(item => item.id !== id)
             }));
 
-            socket.emit('delete chat', {
+            socket.emit('delete chat backend', {
                id
             })
 
@@ -162,8 +164,8 @@ export default class ChatBox extends Component {
    }
 
    typing(name) {
-      socket.emit('typing', {
-         name: name
+      socket.emit('type', {
+         name
       });
    }
 

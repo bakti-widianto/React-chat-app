@@ -25,6 +25,31 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
+ /* socket io connection */
+var socketio = require('socket.io');
+
+var io = socketio(server);
+
+io.on('connection', socket => {
+  console.log('a user connected', socket.id);
+  
+  socket.on('chats', function (data) {
+    socket.broadcast.emit('chat', data);
+  });
+
+  socket.on('type', function (name) {
+    socket.broadcast.emit('typing', name)
+  })
+
+  socket.on('delete chat backend', function (id) {
+    console.log('delete backend')
+    socket.broadcast.emit('delete-chat-frontend', id);
+  })
+
+  // broadcast chat failed
+
+})
+
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
@@ -90,31 +115,5 @@ function onListening() {
 }
 
 
-/* socket io connection */
-var socket = require('socket.io');
 
-var io = socket(server);
-
-io.on('connection', socket => {
-  console.log('a user connected', socket.id);
-
-  // broadcast to others user except original one
-  socket.on('chat', function (data) {
-    socket.broadcast.emit('chat', data);
-  });
-
-  // broadcasts typing except original one
-  socket.on('typing', function (name) {
-    console.log('function typing di www')
-    socket.broadcast.emit('typing', name)
-  })
-
-  // broadcast delete
-  socket.on('delete chat', function (id) {
-    socket.broadcast.emit('delete chat', id);
-  })
-
-  // broadcast chat failed
-
-})
 
