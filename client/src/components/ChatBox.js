@@ -21,6 +21,14 @@ export default class ChatBox extends Component {
 
    componentDidMount() {
       this.loadChat()
+
+      // listening on "chat"
+      socket.on('chat', function (data) {
+         console.log('socket-on listening:', data);
+         this.setState((state, props) => ({
+            data: [...state.data, { ...data, sent: true }]
+         }))
+      }.bind(this))
    }
 
    componentDidUpdate() {
@@ -44,8 +52,12 @@ export default class ChatBox extends Component {
       this.setState((state, props) => ({
          data: [...state.data, { id: id, name: data.name, message: data.message, sent: true }]
       }))
-      console.log(this.state.data);
 
+      socket.emit('chat', {
+         id: id,
+         name: data.name,
+         message: data.message
+      })
 
       // add data chat in Back-end
       request.post('/chat', {
@@ -119,7 +131,7 @@ export default class ChatBox extends Component {
                      timer: 1200
                   })
                })
-               .catch(error =>{
+               .catch(error => {
                   Swal.fire({
                      type: 'warning',
                      text: 'connection problem try again later',

@@ -96,15 +96,18 @@ var socket = require('socket.io');
 var io = socket(server);
 
 io.on('connection', socket => {
-  console.log('made socket connection', socket.id);
+  console.log('a user connected', socket.id);
 
-// emit new chat
+  // broadcast to others user except original one
+  socket.on('chat', function (data) {
+    socket.broadcast.emit('chat', data);
+  });
 
-// broadcasts typing except original one
+  // broadcasts typing except original one
 
-// broadcast delete
+  // broadcast delete
 
-// broadcast chat failed
+  // broadcast chat failed
 
 })
 
