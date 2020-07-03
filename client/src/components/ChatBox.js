@@ -16,19 +16,35 @@ export default class ChatBox extends Component {
    constructor(props) {
       super(props);
       this.state = { data: [], typer: '' }
-      this.addChat = this.addChat.bind(this)
+      this.addChat = this.addChat.bind(this);
+      this.typing = this.typing.bind(this);
    }
 
    componentDidMount() {
       this.loadChat()
 
-      // listening on "chat"
+      // listening on "new chat"
       socket.on('chat', function (data) {
-         console.log('socket-on listening:', data);
          this.setState((state, props) => ({
             data: [...state.data, { ...data, sent: true }]
          }))
       }.bind(this))
+
+      // listening on "delete chat"
+      socket.on('delete chat', function (id) {
+         this.setState(state => ({
+            data: state.data.filter(item => {
+               return item.id !== id
+            })
+         }))
+      }.bind(this))
+
+      socket.on('typing', function (name) {
+         console.log('ada orang lagi typing')
+         // this.setState({
+         //    typer: name
+         // })
+      })
    }
 
    componentDidUpdate() {
@@ -66,7 +82,7 @@ export default class ChatBox extends Component {
          message: data.message
       }).then(function (response) {
 
-      }.bind(this))
+      })
          .catch(function (error) {
             this.setState((state, props) => ({
                data: state.data.map(item => {
@@ -100,7 +116,7 @@ export default class ChatBox extends Component {
          }.bind(this))
          .catch(function (error) {
 
-         }.bind(this))
+         })
    }
 
    deleteChat = (id) => {
@@ -113,17 +129,19 @@ export default class ChatBox extends Component {
          cancelButtonColor: '#d33',
          confirmButtonText: 'Yes, delete it!'
       }).then(result => {
-         console.log(result.value)
          if (result.value) {
             // Delete in front-end
             this.setState((state, props) => ({
-               data: state.data.filter(item => item.id != id)
+               data: state.data.filter(item => item.id !== id)
             }));
 
-            // delete in backend
-            request.delete('/chat' + `/${id}`)
-               .then(response => {
+            socket.emit('delete chat', {
+               id
+            })
 
+            // delete in backend
+            request.delete('/chat/' + id)
+               .then(response => {
                   Swal.fire({
                      type: 'success',
                      title: 'chat has been deleted',
@@ -140,17 +158,20 @@ export default class ChatBox extends Component {
                   })
                })
          }
-
-         // request.delete('/chat' + `/${id}`)
       })
-      console.log(id)
+   }
+
+   typing(name) {
+      socket.emit('typing', {
+         name: name
+      });
    }
 
    render() {
       return (
          <div className="card-body msg_card_body">
             <ListChat messages={this.state.data} resend={this.resendChat} delete={this.deleteChat} />
-            <ChatForm add={this.addChat} />
+            <ChatForm add={this.addChat} typing={this.typing} />
          </div>
       )
    }

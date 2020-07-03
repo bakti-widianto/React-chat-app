@@ -104,8 +104,15 @@ io.on('connection', socket => {
   });
 
   // broadcasts typing except original one
+  socket.on('typing', function (name) {
+    console.log('function typing di www')
+    socket.broadcast.emit('typing', name)
+  })
 
   // broadcast delete
+  socket.on('delete chat', function (id) {
+    socket.broadcast.emit('delete chat', id);
+  })
 
   // broadcast chat failed
 
