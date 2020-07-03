@@ -97,15 +97,13 @@ border-radius: 0 0 15px 15px !important;
   background-color: rgba(0,0,0,0.3) !important;
   border:1px !important;
   color:white !important;
-  height: 60px !important;
   overflow-y: auto;
 }
 
 .type_name {
   background-color: rgba(0,0,0,0.3) !important;
-  border:1px !important;
+  border: solid 1px black !important;
   color:white !important;
-  height: 60px !important;
   overflow-y: auto;
 }
 
@@ -231,7 +229,14 @@ padding: 10px;
 position: relative;
 }
 
-
+.delete_cotainer{
+width: 20px;
+height: 10px;
+border-radius: 100px;
+background-color: darkmagenta;
+padding: 10px;
+position: relative;
+}
 
 .msg_cotainer_send{
 margin-top: auto;

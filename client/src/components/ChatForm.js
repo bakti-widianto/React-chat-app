@@ -3,8 +3,7 @@ import React, { Component } from 'react';
 export default class FormItem extends Component {
    constructor(props) {
       super(props);
-      this.state = { message: '', name: '' };
-
+      this.state = { id: null, name: '', message: '' };
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
    }
@@ -14,9 +13,9 @@ export default class FormItem extends Component {
    }
 
    handleSubmit(event) {
-      this.setState({ message: '' })
-      console.log(event.target)
       event.preventDefault();
+      this.setState({ message: '' })
+      this.props.add(this.state);
    }
 
    render() {

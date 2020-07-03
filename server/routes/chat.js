@@ -5,11 +5,12 @@ const Chat = require('../models/chat');
 
 /* GET chat listing. */
 router.get('/', function (req, res, next) {
-  Chat.find().sort({ createdAt: -1 })
+  Chat.find().sort({ createdAt: 1 })
     .then(result => {
       let data = result.map(item => {
         return {
           _id: item._id,
+          id: item.chatId,
           name: item.name,
           message: item.message,
           date: moment(item.createdAt).format("YYYY-MM-DD HH:mm:ss").split(" ")[0],
@@ -31,7 +32,7 @@ router.get('/', function (req, res, next) {
 
 /* Post new message */
 router.post('/', function (req, res, next) {
-  Chat.create({ name: req.body.name, message: req.body.message })
+  Chat.create({ chatId: req.body.id, name: req.body.name, message: req.body.message })
     .then(data => {
       res.json({
         error: false,
@@ -49,7 +50,7 @@ router.post('/', function (req, res, next) {
 /* Delete Message */
 router.delete('/:id', (req, res) => {
   const id = req.params.id;
-  Chat.findByIdAndRemove({ _id: id })
+  Chat.findOneAndRemove({ chatId: id })
     .then((result) => {
       res.json({
         error: false,

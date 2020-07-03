@@ -18,10 +18,11 @@ function ChatItem(props) {
          </div>
 
          <p className="name_cotainer">{props.message.name}</p>
-         <div className="msg_cotainer">
+         <div className="msg_cotainer" onDoubleClick={() => props.delete(props.message.id)}>
             {props.message.message}
             <span className="msg_time">{dateConvert(props.message.date)}, {props.message.time}</span>
          </div>
+         {!props.message.sent && <div><button onClick={() => props.resend(props.message)}>Resend</button></div>}
       </div>
    )
 }
