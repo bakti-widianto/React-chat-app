@@ -5,7 +5,7 @@ import io from 'socket.io-client';
 import ChatForm from './ChatForm';
 import ListChat from './ListChat';
 
-var socket = io.connect('http://localhost:3001');
+var socket = io.connect('http://54.255.116.165:3001');
 const request = axios.create({
    baseURL: 'http://54.255.116.165:3001/api',
    timeout: 1000,
