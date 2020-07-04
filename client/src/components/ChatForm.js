@@ -7,6 +7,7 @@ export default class FormItem extends Component {
       this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
       this.handleTyping = this.handleTyping.bind(this);
+      this.handleEnter = this.handleEnter.bind(this);
    }
 
    handleChange(event) {
@@ -24,6 +25,13 @@ export default class FormItem extends Component {
       this.props.typing(name);
    }
 
+   handleEnter(event) {
+      if(event.which == 13 && !event.shiftKey){
+         let btn = document.getElementById('submit-button');
+         btn.click();
+      }
+   }
+
    render() {
       return (
          <div className="card-footer d-flex mb-4 justify-content-center">
@@ -34,10 +42,10 @@ export default class FormItem extends Component {
                   </div>
                   <div className="form-group-row">
                      <input className="form-control type_msg" name="name" type="text" value={this.state.name} onChange={this.handleChange} placeholder="Type your Name..." />
-                     <textarea type="text" value={this.state.message} name="message" className="form-control type_msg" placeholder="Type your message..." onChange={this.handleChange} onKeyUp={this.handleTyping}></textarea>
+                     <textarea type="text" value={this.state.message} name="message" className="form-control type_msg" placeholder="Type your message..." onChange={this.handleChange} onKeyUp={this.handleTyping} onKeyDown={this.handleEnter}></textarea>
                   </div>
                   <div className="input-group-append">
-                     <button type="submit" value="Submit" className="input-group-text send_btn"><i className="fas fa-location-arrow"></i></button>
+                     <button type="submit" value="Submit" id="submit-button" className="input-group-text send_btn"><i className="fas fa-location-arrow"></i></button>
                   </div>
                </div>
             </form>

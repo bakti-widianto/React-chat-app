@@ -12,29 +12,26 @@ const request = axios.create({
    headers: {}
 });
 
+const typingTimerLength = 400; //ms
+
 export default class ChatBox extends Component {
    constructor(props) {
       super(props);
-      this.state = { data: [], typer: '' }
+      this.state = { data: [], typer: '', typing: false }
       this.addChat = this.addChat.bind(this);
-      this.typing = this.typing.bind(this);
+      this.updateTyping = this.updateTyping.bind(this);
    }
 
    componentDidMount() {
       this.loadChat()
 
-      // listening on "new chat"
       socket.on('chat', function (data) {
          this.setState((state, props) => ({
             data: [...state.data, { ...data, sent: true }]
          }))
       }.bind(this))
 
-      // listening on "delete chat"
       socket.on('delete-chat-frontend', function (id) {
-         console.log('deleting in front');
-         console.log(this.state.data);
-         console.log('id from backend:', id)
          this.setState((state, props) => ({
             data: state.data.filter(item => {
                return item.id !== id.id
@@ -42,11 +39,19 @@ export default class ChatBox extends Component {
          }))
       }.bind(this))
 
-      socket.on('typing', function (typer) {
+      socket.on('typing from back', function (typer) {
          this.setState({
-            typer
+            typing: true,
+            typer: typer.name
          })
       }.bind(this))
+
+      socket.on('stop typing from back', function () {
+         this.setState({
+            typing: false
+         })
+      }.bind(this))
+
    }
 
    componentDidUpdate() {
@@ -94,7 +99,6 @@ export default class ChatBox extends Component {
                   return item;
                })
             }))
-            console.log(this.state)
          }.bind(this))
    }
 
@@ -114,7 +118,6 @@ export default class ChatBox extends Component {
                   return item;
                })
             }))
-            console.log(this.state.data);
          }.bind(this))
          .catch(function (error) {
 
@@ -163,17 +166,22 @@ export default class ChatBox extends Component {
       })
    }
 
-   typing(name) {
-      socket.emit('type', {
+   updateTyping(name) {
+      socket.emit('typing from front', {
          name
       });
+
+      setTimeout(() => {
+         socket.emit('stop typing from front');
+      }, 3000)
    }
+
 
    render() {
       return (
          <div className="card-body msg_card_body">
-            <ListChat messages={this.state.data} resend={this.resendChat} delete={this.deleteChat} />
-            <ChatForm add={this.addChat} typing={this.typing} />
+            <ListChat messages={this.state.data} resend={this.resendChat} delete={this.deleteChat} feedback={this.state.typing} typer={this.state.typer} />
+            <ChatForm add={this.addChat} typing={this.updateTyping} />
          </div>
       )
    }
