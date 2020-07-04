@@ -7,7 +7,7 @@ import ListChat from './ListChat';
 
 var socket = io.connect('http://localhost:3001');
 const request = axios.create({
-   baseURL: 'http://localhost:3001/api',
+   baseURL: 'http://54.255.116.165/:3001/api',
    timeout: 1000,
    headers: {}
 });
