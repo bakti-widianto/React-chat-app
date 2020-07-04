@@ -166,6 +166,8 @@ export default class ChatBox extends Component {
       })
    }
 
+
+
    updateTyping(name) {
       socket.emit('typing from front', {
          name
@@ -179,9 +181,24 @@ export default class ChatBox extends Component {
 
    render() {
       return (
-         <div className="card-body msg_card_body">
-            <ListChat messages={this.state.data} resend={this.resendChat} delete={this.deleteChat} feedback={this.state.typing} typer={this.state.typer} />
-            <ChatForm add={this.addChat} typing={this.updateTyping} />
+         // header 
+         <div className="container d-flex mx-auto mt-5 col-md-8 col-xl-6 chat">
+            <div className="card">
+               <div className="card-header text-center">
+                  <div>
+                     <h4> Welcome to React Chat </h4>
+                     <div className="online_icon"></div>
+                     <div className="active_user">
+                        <p>Active users : 6 </p>
+                     </div>
+                  </div>
+               </div>
+
+               <div className="card-body msg_card_body">
+                  <ListChat messages={this.state.data} resend={this.resendChat} delete={this.deleteChat} feedback={this.state.typing} typer={this.state.typer} />
+               </div>
+               <ChatForm add={this.addChat} typing={this.updateTyping} />
+            </div>
          </div>
       )
    }
