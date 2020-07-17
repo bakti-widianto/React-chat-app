@@ -5,9 +5,9 @@ import io from 'socket.io-client';
 import ChatForm from './ChatForm';
 import ListChat from './ListChat';
 
-var socket = io.connect('http://54.255.116.165:3001');
+var socket = io.connect('http://localhost:3001');
 const request = axios.create({
-   baseURL: 'http://54.255.116.165:3001/api',
+   baseURL: 'http://localhost:3001/api',
    timeout: 1000,
    headers: {}
 });
@@ -23,7 +23,8 @@ export default class ChatBox extends Component {
    }
 
    componentDidMount() {
-      this.loadChat()
+      this.loadChat();
+      this.scrollToBottom();
 
       socket.on('chat', function (data) {
          this.setState((state, props) => ({
@@ -54,8 +55,12 @@ export default class ChatBox extends Component {
 
    }
 
-   componentDidUpdate() {
+   scrollToBottom = () => {
+      this.messagesEnd.scrollIntoView({ behaviour: "smooth" });
+   }
 
+   componentDidUpdate() {
+      this.scrollToBottom();
    }
 
    loadChat() {
@@ -196,6 +201,8 @@ export default class ChatBox extends Component {
 
                <div className="card-body msg_card_body">
                   <ListChat messages={this.state.data} resend={this.resendChat} delete={this.deleteChat} feedback={this.state.typing} typer={this.state.typer} />
+                  <div style={{ float: "left", clear: "both" }} ref={(el) => { this.messagesEnd = el }}>
+                  </div>
                </div>
                <ChatForm add={this.addChat} typing={this.updateTyping} />
             </div>
